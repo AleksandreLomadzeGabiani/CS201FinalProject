@@ -1,2 +1,6 @@
 Selin
 
+<<<<<<< HEAD
+=======
+Aryan Kapoor
+>>>>>>> Aryan
