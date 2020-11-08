@@ -6,6 +6,8 @@ import java.util.List;
 public class SQLutil {
 	//CALLED EXCLUSIVELY BY SERVER
 	
+	//TODO: SYNCHRONIZATION WORK !!!!!
+	
 	public static List<Post> updatePosts() {
 		//TODO: return list of posts from DB to server
 		return new ArrayList<Post>();
