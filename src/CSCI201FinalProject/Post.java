@@ -1,8 +1,10 @@
 package CSCI201FinalProject;
 
 import java.util.Date;
+import java.io.Serializable;
 
-public class Post {
+public class Post implements Serializable {
+	private static final long serialVersionUID = 5950169519310163575L;
 	private String userName;
 	private Date date;
 	private String title;
@@ -18,6 +20,31 @@ public class Post {
 		this.paymentLink=paymentLink;
 	}
 	
+	 public boolean equals(Object o) {
+		 if (this == o) return true;
+		 if (o == null || getClass() != o.getClass()) return false;
+
+		 Post post = (Post) o;
+
+		 if (date != post.date) return false;
+		 if (date != null ? !date.equals(post.date) : post.date != null) return false;
+
+		 return true;
+		 }
+
+		 public int hashCode() {
+			 return 0;
+		 }
+	
+	public boolean isNull() {
+		if(userName==null && title==null && post==null && paymentLink==null &&date==null) {
+			return true;
+		}else {
+			return false;
+		}
+	}
+		 
+		 
 	/* Returns the string representation that 
 	 * the Post will appear as in the UI */
 	@Override
