@@ -20,6 +20,22 @@ public class Post implements Serializable {
 		this.paymentLink=paymentLink;
 	}
 	
+	public String getTitle() {
+		return title;
+	}
+	
+	public String getUsername() {
+		return userName;
+	}
+	
+	public String getPaylink() {
+		return paymentLink;
+	}
+	
+	public String getPost() {
+		return post;
+	}
+	
 	 public boolean equals(Object o) {
 		 if (this == o) return true;
 		 if (o == null || getClass() != o.getClass()) return false;

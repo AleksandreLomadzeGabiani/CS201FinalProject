@@ -27,11 +27,46 @@ public class SQLutil {
 	
 	public static List<Post> updatePosts() {
 		//TODO: return list of posts from DB to server
+		String sql="set @last_id=?";
+		try (Connection conn = DriverManager.getConnection(db, user, pwd);
+				  PreparedStatement ps = conn.prepareStatement(sql);){
+			ps.setString(1,"-15");
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		String sql2="SELECT * FROM Posts  WHERE PostId>=last_id-15 order by Dateof limit 15";
+		try (Connection conn = DriverManager.getConnection(db, user, pwd);
+				  PreparedStatement ps = conn.prepareStatement(sql);){
+			ResultSet rs=ps.executeQuery();
+			while (rs.next())
+				System.out.println (
+					rs.getString("username" ) + "\n" +
+					rs.getString("Dateof") + "\t" +
+					rs.getString("Title")  + "\n" +
+					rs.getString("Post")+ "\n" +
+					rs.getString("Paymentlink"));
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return new ArrayList<Post>();
 	}
 	
 	public static boolean makePost(Post post) {
 		//TODO: add post to the database
+		String sql= "{CALL makePost(?,?,?,?)}";
+		try (Connection conn = DriverManager.getConnection(db, user, pwd);
+				CallableStatement stmt = conn.prepareCall(sql);){
+				stmt.setString(1, post.getPost());
+				stmt.setString(2, post.getUsername());
+				stmt.setString(3, post.getPaylink());
+				stmt.setString(4, post.getTitle());
+				stmt.executeUpdate();
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
 		return false;
 	}
 	//Output: 	username if successful login
