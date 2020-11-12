@@ -41,3 +41,33 @@ begin
 end$$
 
 DELIMITER ;
+
+create table Posts(
+	Dateof date NOT NULL,
+    PostId int NOT NULL AUTO_INCREMENT,
+    Post varchar(2000) NOT NULL,
+    Title varchar(2000) NOT NULL,
+    Paymentlink varchar(2000) NOT NULL,
+    username char(30) not null unique,
+    PRIMARY KEY (PostId),
+    FOREIGN KEY (username) references authenticator(username)
+);
+
+set @last_id=0;
+
+DELIMITER $$
+CREATE PROCEDURE makePost(IN userpost varchar(2000), IN usern char(30), IN paylink varchar(2000), IN title varchar(2000))
+begin
+	INSERT INTO Posts (Dateof, Post, username, Paymentlink, Title) values (curdate(), userpost, usern, paylink, title);
+    SET @last_id=@last_id+1;
+end$$
+DELIMITER ;
+
+set @last_id=@last_id-15;
+SELECT * FROM Posts  WHERE PostId>=last_id-15 order by Dateof limit 15;
+
+
+
+
+
+    
