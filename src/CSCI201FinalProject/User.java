@@ -72,7 +72,10 @@ public class User {
 		System.out.println("u - update page");
 		System.out.println("q - quit");
 		while(!command.equals("q")){
-			//TODO: Handle user interaction/ command sending
+			//Handle user interaction/ command sending
+			
+			//TODO: test user interaction / command sending
+			
 			command=sc.nextLine();
 			
 			try {

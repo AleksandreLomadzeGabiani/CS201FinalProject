@@ -9,6 +9,7 @@ package CSCI201FinalProject;
 
 import java.io.*;
 import java.net.*;
+import java.text.ParseException;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -42,6 +43,7 @@ public class Server {
         private ObjectInputStream objIn;
         private ObjectOutputStream objOut;
         private List<Post> posts;
+        private int start;
         
         public ClientHandler(Socket socket) {
             this.clientSocket = socket;
@@ -53,15 +55,19 @@ public class Server {
 	            in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 	            objIn= new ObjectInputStream(clientSocket.getInputStream());
 	            objOut=new ObjectOutputStream(clientSocket.getOutputStream());
-	            posts=SQLutil.updatePosts();
+	            start=SQLutil.last_id();
+	            posts=SQLutil.updatePosts(start);
+	            start=Math.max(0,start-15);
 	            ListIterator<Post> it=posts.listIterator();
 	            
 	            String inputLine;
 	            String userName;
 	            String password;
 	            while ((inputLine = in.readLine()) != null) {
-	            	//TODO: Code in user command handling
+	            	//Code in user command handling
 	            	
+	            	//TODO: test User.java interaction / command sending
+	    			
 	            	if("n".equals(inputLine)) {
 	            		if(it.hasNext()) {
 	            			objOut.writeObject(it.next());
@@ -91,9 +97,13 @@ public class Server {
 						
 					}else if ("u".equals(inputLine)) {
 						//update posts
-						posts=SQLutil.updatePosts();
-            			it=posts.listIterator();
+						posts=SQLutil.updatePosts(start);
+			            start=Math.max(0,start-15);
             			
+			            if(start==0) {
+			            	start=SQLutil.last_id();
+			            }
+			            
 					}else if("p".equals(inputLine)) {
 						//post a post
 	            		try {
@@ -123,12 +133,15 @@ public class Server {
 	            clientSocket.close();
         	}catch(IOException e) {
         		e.printStackTrace();
-        	}
+        	} catch (ParseException e1) {
+				//TODO: figure out what to do at parse exception
+				e1.printStackTrace();
+			}
         }
     }
     
     public static void main(String[] args) {
-    	//TODO: LOGIN INTO SERVER
+    	SQLutil.loginDB();
     	Server server = new Server();
     	server.start(7777);
     }
