@@ -25,7 +25,7 @@ public class SQLutil {
 		pwd = "root";
 	}
 	
-	public static List<Post> updatePosts() {
+	public static List<Post> updatePosts(int start) {
 		//TODO: return list of posts from DB to server
 		return new ArrayList<Post>();
 	}

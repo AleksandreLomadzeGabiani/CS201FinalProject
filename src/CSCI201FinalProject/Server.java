@@ -128,6 +128,7 @@ public class Server {
     }
     
     public static void main(String[] args) {
+    	//TODO: LOGIN INTO SERVER
     	Server server = new Server();
     	server.start(7777);
     }
