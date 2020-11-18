@@ -2,8 +2,11 @@ package CSCI201FinalProject;
 
 import java.util.ArrayList;
 import java.sql.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.io.*;
 import java.util.List;
+import java.util.Date;
 
 public class SQLutil {
 	//CALLED EXCLUSIVELY BY SERVER
@@ -25,33 +28,42 @@ public class SQLutil {
 		pwd = "root";
 	}
 	
-	public static List<Post> updatePosts() {
+	public int last_id() {
+		String sql="{? = call last_id(?)}";
+		try (Connection conn1 = DriverManager.getConnection(db, user, pwd);
+				CallableStatement ps = conn1.prepareCall(sql);) {
+			int id=0;
+			ps.registerOutParameter(1, Types.INTEGER);
+			ps.setString(1,"id");
+			ps.execute();
+			return id;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return 0;
+	}
+	public static List<Post> updatePosts(int start) throws ParseException {
 		//TODO: return list of posts from DB to server
-		String sql="set @last_id=?";
+		ArrayList posts= new ArrayList<Post>();
+		String sql="SELECT * FROM Posts  WHERE PostId>=? order by Dateof limit 15";
 		try (Connection conn = DriverManager.getConnection(db, user, pwd);
 				  PreparedStatement ps = conn.prepareStatement(sql);){
-			ps.setString(1,"-15");
-			ps.executeUpdate();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		String sql2="SELECT * FROM Posts  WHERE PostId>=last_id-15 order by Dateof limit 15";
-		try (Connection conn = DriverManager.getConnection(db, user, pwd);
-				  PreparedStatement ps = conn.prepareStatement(sql);){
+			ps.setString(1,"start-15");
 			ResultSet rs=ps.executeQuery();
-			while (rs.next())
-				System.out.println (
-					rs.getString("username" ) + "\n" +
-					rs.getString("Dateof") + "\t" +
-					rs.getString("Title")  + "\n" +
-					rs.getString("Post")+ "\n" +
-					rs.getString("Paymentlink"));
+			while (rs.next()) {
+					String date=rs.getString("Dateof");
+					SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd");
+					Date date_= formatter.parse(date);
+					Post post= new Post(rs.getString("username"), date_, rs.getString("Title"),
+							rs.getString("Post"), rs.getString("Paymentlink"));
+					posts.add(post);
+			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return new ArrayList<Post>();
+		return posts;
 	}
 	
 	public static boolean makePost(Post post) {
@@ -77,7 +89,7 @@ public class SQLutil {
 		try (Connection conn = DriverManager.getConnection(db, user, pwd);
 			CallableStatement stmt = conn.prepareCall(sql);) {
 			stmt.setString(1, userName);
-			stmt.setString(1, password);
+			stmt.setString(2, password);
 			//returns 1 for success, 0 for failure
 			ResultSet rs = stmt.executeQuery();
 			rs.next();
