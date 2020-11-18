@@ -40,28 +40,27 @@ begin
 	VALUES (user, pass);
 end$$
 
-CREATE FUNCTION authenticate(user varchar(30), pass varchar(30))
-RETURNS BIT
+CREATE FUNCTION usernameExists(user varchar(30))
+RETURNS INT DETERMINISTIC
 begin
-    RETURN
-	CASE
-		WHEN EXISTS 
-        (SELECT * FROM Authenticator WHERE username = user AND password = pass ) 
-        THEN 1
-        ELSE 0
-	END;
+	DECLARE count INT;
+	SELECT COUNT(*) 
+		INTO count 
+        FROM authenticator 
+        WHERE username = user;
+    RETURN count;
 end$$
 
-CREATE FUNCTION usernameExists(user varchar(30))
-RETURNS BIT
+CREATE FUNCTION authenticate(user varchar(30), pass varchar(30))
+RETURNS INT DETERMINISTIC
 begin
-    RETURN
-	CASE
-		WHEN EXISTS 
-        (SELECT * FROM Authenticator WHERE username = user) 
-        THEN 1
-        ELSE 0
-	END;
+	DECLARE count INT;
+	SELECT COUNT(*) 
+		INTO count 
+        FROM authenticator 
+        WHERE username = user 
+        AND password = pass;
+    RETURN count;
 end$$
 
 CREATE FUNCTION last_id(id int)
