@@ -42,7 +42,6 @@ public class Server {
         private BufferedReader in;
         private ObjectInputStream objIn;
         private ObjectOutputStream objOut;
-        private List<Post> posts;
         private int start;
         
         public ClientHandler(Socket socket) {
@@ -56,9 +55,6 @@ public class Server {
 	            objIn= new ObjectInputStream(clientSocket.getInputStream());
 	            objOut=new ObjectOutputStream(clientSocket.getOutputStream());
 	            start=SQLutil.last_id();
-	            posts=SQLutil.updatePosts(start);
-	            start=Math.max(0,start-15);
-	            ListIterator<Post> it=posts.listIterator();
 	            
 	            String inputLine;
 	            String userName;
@@ -69,8 +65,10 @@ public class Server {
 	            	//TODO: test User.java interaction / command sending
 	    			
 	            	if("n".equals(inputLine)) {
-	            		if(it.hasNext()) {
-	            			objOut.writeObject(it.next());
+	            		if(start>=0) {
+	            			Post in=SQLutil.getPost(start);
+	            			objOut.writeObject(in);
+	            			start=start-1;
 	            		}else {
 	            			objOut.writeObject(new Post(null,null,null,null,null));
 	            		}
@@ -97,12 +95,9 @@ public class Server {
 						
 					}else if ("u".equals(inputLine)) {
 						//update posts
-						posts=SQLutil.updatePosts(start);
-			            start=Math.max(0,start-15);
-            			
-			            if(start==0) {
-			            	start=SQLutil.last_id();
-			            }
+						
+			            start=SQLutil.last_id();
+			            
 					}else if("p".equals(inputLine)) {
 						//post a post
 	            		try {

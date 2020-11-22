@@ -73,7 +73,7 @@ public class SQLutil {
 	
 	public static Post getPost(int id) throws ParseException {
 		String sql="SELECT * FROM Posts  WHERE PostId=?";
-		Post post = null;
+		Post post = new Post(null,null,null,null,null);
 		try (Connection conn = DriverManager.getConnection(db, user, pwd);
 				  PreparedStatement ps = conn.prepareStatement(sql);){
 			ps.setInt(1,id);
