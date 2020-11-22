@@ -71,6 +71,28 @@ public class SQLutil {
 		return posts;
 	}
 	
+	public static Post getPost(int id) throws ParseException {
+		String sql="SELECT * FROM Posts  WHERE PostId=?";
+		Post post = null;
+		try (Connection conn = DriverManager.getConnection(db, user, pwd);
+				  PreparedStatement ps = conn.prepareStatement(sql);){
+			ps.setInt(1,id);
+			ResultSet rs=ps.executeQuery();
+			while (rs.next()) {
+					String date=rs.getString("Dateof");
+					SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd");
+					Date date_= formatter.parse(date);
+					post= new Post(rs.getString("username"), date_, rs.getString("Title"),
+							rs.getString("Post"), rs.getString("Paymentlink"));
+					return post;
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return post;
+	}
+	
 	public static boolean makePost(Post post) {
 		//TODO: add post to the database
 		String sql= "{CALL makePost(?,?,?,?)}";
