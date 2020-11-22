@@ -103,7 +103,6 @@ public class Server {
 			            if(start==0) {
 			            	start=SQLutil.last_id();
 			            }
-			            
 					}else if("p".equals(inputLine)) {
 						//post a post
 	            		try {

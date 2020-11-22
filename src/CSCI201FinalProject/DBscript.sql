@@ -15,7 +15,7 @@ create table Authenticator (
     Post varchar(2000) NOT NULL,
     Title varchar(2000) NOT NULL,
     Paymentlink varchar(2000) NOT NULL,
-    username char(30) not null unique,
+    username char(30) not null,
     PRIMARY KEY (PostId),
     FOREIGN KEY (username) references authenticator(username)
 );
@@ -26,28 +26,47 @@ DROP PROCEDURE if exists registerUser;
 DROP FUNCTION if exists authenticate;
 DROP FUNCTION if exists usernameExists;
 DELIMITER $$
-CREATE FUNCTION authenticate(user varchar(30), pass varchar(30))
-RETURNS BIT
+
+CREATE PROCEDURE makePost(IN userpost varchar(2000), IN usern char(30), IN paylink varchar(2000), IN title varchar(2000))
 begin
-    RETURN
-	CASE
-		WHEN EXISTS 
-        (SELECT * FROM Authenticator WHERE username = user AND password = pass ) 
-        THEN 1
-        ELSE 0
-	END;
+	INSERT INTO Posts (Dateof, Post, username, Paymentlink, Title) values (curdate(), userpost, usern, paylink, title);
+    SET @last_id=@last_id+1;
 end$$
 
-CREATE FUNCTION usernameExists(user varchar(30))
-RETURNS BIT
+
+CREATE PROCEDURE registerUser(IN user varchar(30), IN pass varchar(30))
 begin
-    RETURN
-	CASE
-		WHEN EXISTS 
-        (SELECT * FROM Authenticator WHERE username = user) 
-        THEN 1
-        ELSE 0
-	END;
+	INSERT INTO Authenticator(username, password)
+	VALUES (user, pass);
+end$$
+
+/*
+returns: username exists -> 1; the username does not exist -> 0;
+*/ 
+CREATE FUNCTION usernameExists(user varchar(30))
+RETURNS INT DETERMINISTIC
+begin
+	DECLARE count INT;
+	SELECT COUNT(*) 
+		INTO count 
+        FROM authenticator 
+        WHERE username = user;
+    RETURN count;
+end$$
+
+/*
+returns: valid -> 1; invalid -> 0;
+*/ 
+CREATE FUNCTION authenticate(user varchar(30), pass varchar(30))
+RETURNS INT DETERMINISTIC
+begin
+	DECLARE count INT;
+	SELECT COUNT(*) 
+		INTO count 
+        FROM authenticator 
+        WHERE username = user 
+        AND password = pass;
+    RETURN count;
 end$$
 
 CREATE FUNCTION last_id(id int)
@@ -57,21 +76,8 @@ set id=@last_id;
 return id;
 end$$
 
-CREATE PROCEDURE registerUser(IN user varchar(30), IN pass varchar(30))
-begin
-	INSERT INTO Authenticator(username, password)
-	VALUES (user, pass);
-end$$
-
 DELIMITER ;
 
-DELIMITER $$
-CREATE PROCEDURE makePost(IN userpost varchar(2000), IN usern char(30), IN paylink varchar(2000), IN title varchar(2000))
-begin
-	INSERT INTO Posts (Dateof, Post, username, Paymentlink, Title) values (curdate(), userpost, usern, paylink, title);
-    SET @last_id=@last_id+1;
-end$$
-DELIMITER ;
 
 
 
