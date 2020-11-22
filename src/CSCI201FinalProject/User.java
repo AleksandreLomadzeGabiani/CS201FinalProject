@@ -148,6 +148,8 @@ public class User {
 					else
 					{
 						System.out.println("Succesfully registered with username: "+responseMessage);
+						user = new User(responseMessage);
+						user.startConnection("127.0.0.1", 7777);
 					}
 						
 					
