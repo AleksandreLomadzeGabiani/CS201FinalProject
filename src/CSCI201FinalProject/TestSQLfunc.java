@@ -70,6 +70,13 @@ public class TestSQLfunc {
 		System.out.println();
 		
 		
+		System.out.println("===Last ID===");
+		int outputINT = SQLutil.last_id();
+		
+		
+		System.out.println("Output: "+ outputINT);
+		System.out.println();
+		
 //		User user=new User(null);
 //		user.startConnection("127.0.0.1", 7777);
 //		System.out.println(user.sendMessage("owo"));

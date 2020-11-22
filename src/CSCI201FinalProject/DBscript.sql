@@ -2,7 +2,6 @@ DROP DATABASE IF EXISTS CSCI201FinalProject;
 CREATE DATABASE CSCI201FinalProject;
 use CSCI201FinalProject;
 
-set @last_id=0;
 
 create table Authenticator (
   username char(30) not null unique primary key, 
@@ -30,7 +29,6 @@ DELIMITER $$
 CREATE PROCEDURE makePost(IN userpost varchar(2000), IN usern char(30), IN paylink varchar(2000), IN title varchar(2000))
 begin
 	INSERT INTO Posts (Dateof, Post, username, Paymentlink, Title) values (curdate(), userpost, usern, paylink, title);
-    SET @last_id=@last_id+1;
 end$$
 
 
@@ -69,10 +67,14 @@ begin
     RETURN count;
 end$$
 
-CREATE PROCEDURE last_id(out num int)
+CREATE FUNCTION last_id()
+RETURNS INT DETERMINISTIC
 begin
-select @last_id
-into num;
+	DECLARE count INT;
+	SELECT COUNT(*) 
+		INTO count 
+        FROM posts;
+    RETURN count;
 end$$
 
 DELIMITER ;

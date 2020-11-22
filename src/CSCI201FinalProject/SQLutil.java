@@ -33,20 +33,20 @@ public class SQLutil {
 	}
 	
 	public static int last_id() {
-		String sql="{CALL last_id(?)}";
+		String sql = "SELECT last_id()"; 
 		try (Connection conn = DriverManager.getConnection(db, user, pwd);
-				CallableStatement stmt = conn.prepareCall(sql);){
-			int id = 0;
-			stmt.registerOutParameter(1, Types.INTEGER);
-			stmt.executeUpdate();
-			id=stmt.getInt(1);
-			return id;
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			CallableStatement stmt = conn.prepareCall(sql);) {
+			
+			//returns # of posts in DB
+			ResultSet rs = stmt.executeQuery();
+			rs.next();
+			return rs.getInt(1);
+		} catch (SQLException ex) {
+			System.out.println ("SQLException: " + ex.getMessage());
 		}
-		return 0;
+		return -1;
 	}
+
 	public static List<Post> updatePosts(int start) throws ParseException {
 		//TODO: return list of posts from DB to server
 		ArrayList posts= new ArrayList<Post>();
