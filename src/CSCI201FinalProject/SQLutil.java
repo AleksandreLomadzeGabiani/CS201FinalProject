@@ -33,15 +33,13 @@ public class SQLutil {
 	}
 	
 	public static int last_id() {
-		String sql="{CALL last_id()}";
+		String sql="{? = CALL last_id()}";
 		try (Connection conn = DriverManager.getConnection(db, user, pwd);
 				CallableStatement stmt = conn.prepareCall(sql);){
-			ResultSet rs=stmt.executeQuery();
 			int id = 0;
-			while (rs.next()) {
-					id=rs.getInt(1);
-					
-			}
+			stmt.registerOutParameter(1, Types.INTEGER);
+			stmt.execute();
+			id=stmt.getInt(1);
 			return id;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
