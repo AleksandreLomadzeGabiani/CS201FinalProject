@@ -116,9 +116,9 @@ public class User {
 					else
 					{
 						System.out.println("Succesfully logged in with username: "+responseMessage);
+						user=new User(responseMessage);
 					}
-					
-					
+
 				}else if ("r".equals(command)) {
 					//TODO: implement register
 					user.out.println("r");
