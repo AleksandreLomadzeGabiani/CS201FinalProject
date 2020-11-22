@@ -28,7 +28,7 @@ public class SQLutil {
 		pwd = "root";
 	}
 	
-	public int last_id() {
+	public static int last_id() {
 		String sql="{? = call last_id(?)}";
 		try (Connection conn1 = DriverManager.getConnection(db, user, pwd);
 				CallableStatement ps = conn1.prepareCall(sql);) {

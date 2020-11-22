@@ -9,6 +9,7 @@ package CSCI201FinalProject;
 
 import java.io.*;
 import java.net.*;
+import java.text.ParseException;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -42,6 +43,7 @@ public class Server {
         private ObjectInputStream objIn;
         private ObjectOutputStream objOut;
         private List<Post> posts;
+        private int start;
         
         public ClientHandler(Socket socket) {
             this.clientSocket = socket;
@@ -53,7 +55,9 @@ public class Server {
 	            in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 	            objIn= new ObjectInputStream(clientSocket.getInputStream());
 	            objOut=new ObjectOutputStream(clientSocket.getOutputStream());
-	            posts=SQLutil.updatePosts();
+	            start=SQLutil.last_id();
+	            posts=SQLutil.updatePosts(start);
+	            start=Math.max(0,start-15);
 	            ListIterator<Post> it=posts.listIterator();
 	            
 	            String inputLine;
@@ -91,9 +95,12 @@ public class Server {
 						
 					}else if ("u".equals(inputLine)) {
 						//update posts
-						posts=SQLutil.updatePosts();
-            			it=posts.listIterator();
+						posts=SQLutil.updatePosts(start);
+			            start=Math.max(0,start-15);
             			
+			            if(start==0) {
+			            	start=SQLutil.last_id();
+			            }
 					}else if("p".equals(inputLine)) {
 						//post a post
 	            		try {
@@ -123,7 +130,10 @@ public class Server {
 	            clientSocket.close();
         	}catch(IOException e) {
         		e.printStackTrace();
-        	}
+        	} catch (ParseException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
         }
     }
     
