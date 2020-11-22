@@ -64,8 +64,10 @@ public class Server {
 	            String userName;
 	            String password;
 	            while ((inputLine = in.readLine()) != null) {
-	            	//TODO: Code in user command handling
+	            	//Code in user command handling
 	            	
+	            	//TODO: test User.java interaction / command sending
+	    			
 	            	if("n".equals(inputLine)) {
 	            		if(it.hasNext()) {
 	            			objOut.writeObject(it.next());
@@ -131,13 +133,14 @@ public class Server {
         	}catch(IOException e) {
         		e.printStackTrace();
         	} catch (ParseException e1) {
-				// TODO Auto-generated catch block
+				//TODO: figure out what to do at parse exception
 				e1.printStackTrace();
 			}
         }
     }
     
     public static void main(String[] args) {
+    	SQLutil.loginDB();
     	Server server = new Server();
     	server.start(7777);
     }

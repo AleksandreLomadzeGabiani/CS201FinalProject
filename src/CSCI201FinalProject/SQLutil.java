@@ -12,6 +12,10 @@ public class SQLutil {
 	//CALLED EXCLUSIVELY BY SERVER
 	
 	//TODO: SYNCHRONIZATION WORK !!!!!
+	
+	//TODO: test server interaction / command sending
+	
+	
 	private static String db;
 	private static String user;
 	private static String pwd;
@@ -46,6 +50,7 @@ public class SQLutil {
 	public static List<Post> updatePosts(int start) throws ParseException {
 		//TODO: return list of posts from DB to server
 		ArrayList posts= new ArrayList<Post>();
+		
 		String sql="SELECT * FROM Posts  WHERE PostId>=? order by Dateof limit 15";
 		try (Connection conn = DriverManager.getConnection(db, user, pwd);
 				  PreparedStatement ps = conn.prepareStatement(sql);){
