@@ -80,7 +80,35 @@ public class User {
 
 				}else if ("l".equals(command)){
 					//TODO: implement login
+					user.out.println("l");
 					
+					String tempUserName;
+					String tempPassword;
+					
+					System.out.println("Login");
+					
+					System.out.println("Enter username");
+					tempUserName=sc.nextLine();
+					
+					System.out.println("Enter password");
+					tempPassword=sc.nextLine();
+					
+					user.out.println(tempUserName);
+					user.out.flush();
+					user.out.println(tempPassword);
+					user.out.flush();
+					
+					String responseMessage = user.in.readLine();
+					if(responseMessage.equals(""))
+					{
+						System.out.println("Login failed, please try again");
+                    }
+					else
+					{
+						System.out.println("Succesfully logged in with username: "+responseMessage);
+						user=new User(responseMessage);
+					}
+
 				}else if ("r".equals(command)) {
 					//TODO: implement register
 					
