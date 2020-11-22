@@ -34,7 +34,7 @@ public class SQLutil {
 				CallableStatement ps = conn1.prepareCall(sql);) {
 			int id=0;
 			ps.registerOutParameter(1, Types.INTEGER);
-			ps.setString(1,"id");
+			ps.setInt(2,id);
 			ps.execute();
 			return id;
 		} catch (SQLException e) {
@@ -78,8 +78,9 @@ public class SQLutil {
 				stmt.executeUpdate();
 		} catch (SQLException e1) {
 			e1.printStackTrace();
+			return false;
 		}
-		return false;
+		return true;
 	}
 	//Output: 	username if successful login
 	//			null if login failed
