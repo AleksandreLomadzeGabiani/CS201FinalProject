@@ -69,11 +69,10 @@ begin
     RETURN count;
 end$$
 
-CREATE FUNCTION last_id(id int)
+CREATE FUNCTION last_id()
 returns int deterministic
 begin
-set id=@last_id;
-return id;
+return @last_id;
 end$$
 
 DELIMITER ;
