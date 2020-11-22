@@ -40,6 +40,9 @@ begin
 	VALUES (user, pass);
 end$$
 
+/*
+returns: username exists -> 1; the username does not exist -> 0;
+*/ 
 CREATE FUNCTION usernameExists(user varchar(30))
 RETURNS INT DETERMINISTIC
 begin
@@ -51,6 +54,9 @@ begin
     RETURN count;
 end$$
 
+/*
+returns: valid -> 1; invalid -> 0;
+*/ 
 CREATE FUNCTION authenticate(user varchar(30), pass varchar(30))
 RETURNS INT DETERMINISTIC
 begin

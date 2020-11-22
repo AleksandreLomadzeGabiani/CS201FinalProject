@@ -85,15 +85,21 @@ public class SQLutil {
 	//			null if login failed
 	//			(e.g: credentials do not match or the connection gets lost)
 	public static String loginUser(String userName, String password) {
-		String sql = "{CALL authenticate(?, ?)}"; 
+		String sql = "SELECT authenticate(?, ?)"; 
 		try (Connection conn = DriverManager.getConnection(db, user, pwd);
 			CallableStatement stmt = conn.prepareCall(sql);) {
 			stmt.setString(1, userName);
 			stmt.setString(2, password);
 			//returns 1 for success, 0 for failure
 			ResultSet rs = stmt.executeQuery();
+//			//TESTING DEBUGGING
+//			System.out.println("hi1");
+//			while(rs.next()) {
+//				System.out.println(rs.getInt(1));
+//			}
 			rs.next();
-			if(rs.getBoolean(1)) {
+			//returns: valid -> 1; invalid -> 0;
+			if(rs.getInt(1) == 1) {
 				return userName;
 			}else {
 				return null;
@@ -109,16 +115,25 @@ public class SQLutil {
 	//				(e.g: username already exists or the connection gets lost)
 	public static String registerUser(String userName, String password) {
 		//TODO: return "T"/"F" if you were able to register user
-		String sql = "{CALL usernameExists(?)}"; 
+		String sql = "SELECT usernameExists(?)"; 
 		String sql2 = "{CALL registerUser(?, ?)}";
 		try (Connection conn = DriverManager.getConnection(db, user, pwd);
 			CallableStatement stmt = conn.prepareCall(sql);
 			CallableStatement stmt2 = conn.prepareCall(sql2);) {
+//			System.out.println("hi12");
 			stmt.setString(1, userName);
+//			System.out.println("hi22");
 			ResultSet rs = stmt.executeQuery();
+//			//TESTING DEBUGGING
+//			System.out.println("hi2");
+//			while(rs.next()) {
+//				System.out.println(rs.getInt(1));
+//			}
+			
 			rs.next();
+			//returns: username exists -> 1; the username does not exist -> 0;
 			//if the username already exists
-			if(rs.getBoolean(1)) {
+			if(rs.getInt(1) == 1) {
 				return "F";
 			}
 			//added the user+pass to the DB
