@@ -107,7 +107,6 @@ public class User {
 					{
 						System.out.println("Succesfully logged in with username: "+responseMessage);
 						user=new User(responseMessage);
-						user.startConnection("127.0.0.1", 7777);
 					}
 
 				}else if ("r".equals(command)) {
