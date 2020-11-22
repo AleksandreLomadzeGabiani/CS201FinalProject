@@ -8,7 +8,7 @@ import java.io.*;
 import java.util.List;
 import java.util.Date;
 
-public class SQLutil {
+	public class SQLutil {
 	//CALLED EXCLUSIVELY BY SERVER
 	
 	//TODO: SYNCHRONIZATION WORK !!!!!
@@ -20,19 +20,19 @@ public class SQLutil {
 	private static String user;
 	private static String pwd;
 	
-	public static void loginDB(String newDB, String newUser, String newPwd) {
+	public synchronized static void loginDB(String newDB, String newUser, String newPwd) {
 		db = newDB;
 		user = newUser;
 		pwd = newPwd;
 	}
 	
-	public static void loginDB() {
+	public synchronized static void loginDB() {
 		db = "jdbc:mysql://localhost/CSCI201FinalProject";
 		user = "root";
 		pwd = "root";
 	}
 	
-	public static int last_id() {
+	public synchronized static int last_id() {
 		String sql = "SELECT last_id()"; 
 		try (Connection conn = DriverManager.getConnection(db, user, pwd);
 			CallableStatement stmt = conn.prepareCall(sql);) {
@@ -47,7 +47,7 @@ public class SQLutil {
 		return -1;
 	}
 
-	public static List<Post> updatePosts(int start) throws ParseException {
+	public synchronized static List<Post> updatePosts(int start) throws ParseException {
 		//TODO: return list of posts from DB to server
 		ArrayList posts= new ArrayList<Post>();
 		
@@ -71,7 +71,7 @@ public class SQLutil {
 		return posts;
 	}
 	
-	public static Post getPost(int id) throws ParseException {
+	public synchronized static Post getPost(int id) throws ParseException {
 		String sql="SELECT * FROM Posts  WHERE PostId=?";
 		Post post = new Post(null,null,null,null,null);
 		try (Connection conn = DriverManager.getConnection(db, user, pwd);
@@ -93,7 +93,7 @@ public class SQLutil {
 		return post;
 	}
 	
-	public static boolean makePost(Post post) {
+	public synchronized static boolean makePost(Post post) {
 		//TODO: add post to the database
 		String sql= "{CALL makePost(?,?,?,?)}";
 		try (Connection conn = DriverManager.getConnection(db, user, pwd);
@@ -112,7 +112,7 @@ public class SQLutil {
 	//Output: 	username if successful login
 	//			null if login failed
 	//			(e.g: credentials do not match or the connection gets lost)
-	public static String loginUser(String userName, String password) {
+	public synchronized static String loginUser(String userName, String password) {
 		String sql = "SELECT authenticate(?, ?)"; 
 		try (Connection conn = DriverManager.getConnection(db, user, pwd);
 			CallableStatement stmt = conn.prepareCall(sql);) {
@@ -141,7 +141,7 @@ public class SQLutil {
 	//Output: 	"T" if the user was able to be registered
 	//			"F" if the could not be registered 
 	//				(e.g: username already exists or the connection gets lost)
-	public static String registerUser(String userName, String password) {
+	public synchronized static String registerUser(String userName, String password) {
 		//TODO: return "T"/"F" if you were able to register user
 		String sql = "SELECT usernameExists(?)"; 
 		String sql2 = "{CALL registerUser(?, ?)}";
@@ -162,16 +162,16 @@ public class SQLutil {
 			//returns: username exists -> 1; the username does not exist -> 0;
 			//if the username already exists
 			if(rs.getInt(1) == 1) {
-				return "F";
+				return null;
 			}
 			//added the user+pass to the DB
 			stmt2.setString(1, userName);
 			stmt2.setString(2, password);
 			rs = stmt2.executeQuery();
-			return "T";
+			return userName;
 		} catch (SQLException ex) {
 			System.out.println ("SQLException: " + ex.getMessage());
 		}
-		return "F";
+		return null;
 	}
 }
