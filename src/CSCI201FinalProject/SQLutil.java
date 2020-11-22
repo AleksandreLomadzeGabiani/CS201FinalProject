@@ -54,7 +54,7 @@ public class SQLutil {
 		String sql="SELECT * FROM Posts  WHERE PostId>=? order by Dateof limit 15";
 		try (Connection conn = DriverManager.getConnection(db, user, pwd);
 				  PreparedStatement ps = conn.prepareStatement(sql);){
-			ps.setString(1,"start-15");
+			ps.setInt(1,start-15);
 			ResultSet rs=ps.executeQuery();
 			while (rs.next()) {
 					String date=rs.getString("Dateof");
