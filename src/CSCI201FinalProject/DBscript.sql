@@ -69,10 +69,10 @@ begin
     RETURN count;
 end$$
 
-CREATE FUNCTION last_id()
-returns int deterministic
+CREATE PROCEDURE last_id(out num int)
 begin
-return @last_id;
+select @last_id
+into num;
 end$$
 
 DELIMITER ;

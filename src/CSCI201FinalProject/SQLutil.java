@@ -33,12 +33,12 @@ public class SQLutil {
 	}
 	
 	public static int last_id() {
-		String sql="{? = CALL last_id()}";
+		String sql="{CALL last_id(?)}";
 		try (Connection conn = DriverManager.getConnection(db, user, pwd);
 				CallableStatement stmt = conn.prepareCall(sql);){
 			int id = 0;
 			stmt.registerOutParameter(1, Types.INTEGER);
-			stmt.execute();
+			stmt.executeUpdate();
 			id=stmt.getInt(1);
 			return id;
 		} catch (SQLException e) {
