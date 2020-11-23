@@ -62,7 +62,6 @@ public class Server {
 	            while ((inputLine = in.readLine()) != null) {
 	            	//Code in user command handling
 	            	
-	            	//TODO: test User.java interaction / command sending
 	    			
 	            	if("n".equals(inputLine)) {
 	            		if(start>=0) {
@@ -128,7 +127,6 @@ public class Server {
         	}catch(IOException e) {
         		e.printStackTrace();
         	} catch (ParseException e1) {
-				//TODO: figure out what to do at parse exception
 				e1.printStackTrace();
 			}
         }

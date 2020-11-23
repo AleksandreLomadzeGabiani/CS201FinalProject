@@ -11,10 +11,6 @@ import java.util.Date;
 	public class SQLutil {
 	//CALLED EXCLUSIVELY BY SERVER
 	
-	//TODO: SYNCHRONIZATION WORK !!!!!
-	
-	//TODO: test server interaction / command sending
-	
 	
 	private static String db;
 	private static String user;
@@ -48,7 +44,6 @@ import java.util.Date;
 	}
 
 	public synchronized static List<Post> updatePosts(int start) throws ParseException {
-		//TODO: return list of posts from DB to server
 		ArrayList posts= new ArrayList<Post>();
 		
 		String sql="SELECT * FROM Posts  WHERE PostId>=? order by Dateof limit 15";
@@ -65,7 +60,6 @@ import java.util.Date;
 					posts.add(post);
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return posts;
@@ -87,14 +81,12 @@ import java.util.Date;
 					return post;
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return post;
 	}
 	
 	public synchronized static boolean makePost(Post post) {
-		//TODO: add post to the database
 		String sql= "{CALL makePost(?,?,?,?)}";
 		try (Connection conn = DriverManager.getConnection(db, user, pwd);
 				CallableStatement stmt = conn.prepareCall(sql);){
@@ -142,7 +134,6 @@ import java.util.Date;
 	//			"F" if the could not be registered 
 	//				(e.g: username already exists or the connection gets lost)
 	public synchronized static String registerUser(String userName, String password) {
-		//TODO: return "T"/"F" if you were able to register user
 		String sql = "SELECT usernameExists(?)"; 
 		String sql2 = "{CALL registerUser(?, ?)}";
 		try (Connection conn = DriverManager.getConnection(db, user, pwd);

@@ -74,7 +74,6 @@ public class User {
 		while(!command.equals("q")){
 			//Handle user interaction/ command sending
 			
-			//TODO: test user interaction / command sending
 			
 			command=sc.nextLine();
 			
@@ -89,7 +88,6 @@ public class User {
 					}
 
 				}else if ("l".equals(command)){
-					//TODO: implement login
 					user.out.println("l");
 					
 					String tempUserName;
@@ -121,7 +119,6 @@ public class User {
 					}
 
 				}else if ("r".equals(command)) {
-					//TODO: implement register
 					user.out.println("r");
 					user.out.flush();
 					
@@ -164,7 +161,6 @@ public class User {
 				
 				else if ("p".equals(command)) {
 					if(user.userName!=null) {
-						//TODO: implement post creation by user
 						user.out.println("p");
 						user.out.flush();
 						System.out.println("Creating new Post");

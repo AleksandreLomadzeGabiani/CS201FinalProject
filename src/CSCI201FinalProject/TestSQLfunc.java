@@ -24,8 +24,8 @@ public class TestSQLfunc {
 		System.out.println("===Valid Register===");
 		String output = SQLutil.registerUser(username, "password");
 		
-		if(output.equals("T")) System.out.println("SUCCESS");
-		else System.out.println("FAIL");
+		if(output == null) System.out.println("FAIL");
+		else System.out.println("SUCCESS");
 		System.out.println("Output: "+ output);
 		System.out.println();
 		
@@ -34,7 +34,7 @@ public class TestSQLfunc {
 		System.out.println("===Invalid Register===");
 		output = SQLutil.registerUser(username, "password");
 		
-		if(output.equals("F")) System.out.println("SUCCESS");
+		if(output == null) System.out.println("SUCCESS");
 		else System.out.println("FAIL");
 		System.out.println("Output: "+ output);
 		System.out.println();
@@ -44,8 +44,8 @@ public class TestSQLfunc {
 		System.out.println("===Valid Login===");
 		output = SQLutil.loginUser(username, "password");
 		
-		if(output.equals(username)) System.out.println("SUCCESS");
-		else System.out.println("FAIL");
+		if(output == null) System.out.println("FAIL");
+		else System.out.println("SUCCESS");
 		System.out.println("Output: "+ output);
 		System.out.println();
 		
