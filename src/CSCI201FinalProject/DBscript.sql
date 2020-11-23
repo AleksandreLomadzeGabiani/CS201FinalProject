@@ -2,35 +2,37 @@ DROP DATABASE IF EXISTS CSCI201FinalProject;
 CREATE DATABASE CSCI201FinalProject;
 use CSCI201FinalProject;
 
-
 create table Authenticator (
   username char(30) not null unique primary key, 
   password varchar(30) not null
   );
-  
-  create table Posts(
-	Dateof date NOT NULL,
-    PostId int NOT NULL AUTO_INCREMENT,
-    Post varchar(2000) NOT NULL,
-    Title varchar(2000) NOT NULL,
-    Paymentlink varchar(2000) NOT NULL,
-    username char(30) not null,
-    PRIMARY KEY (PostId),
-    FOREIGN KEY (username) references authenticator(username)
-);
-
-DROP PROCEDURE if exists makePost;
-Drop function if exists last_id;
 DROP PROCEDURE if exists registerUser;
 DROP FUNCTION if exists authenticate;
 DROP FUNCTION if exists usernameExists;
 DELIMITER $$
-
-CREATE PROCEDURE makePost(IN userpost varchar(2000), IN usern char(30), IN paylink varchar(2000), IN title varchar(2000))
+CREATE FUNCTION authenticate(user varchar(30), pass varchar(30))
+RETURNS BIT
 begin
-	INSERT INTO Posts (Dateof, Post, username, Paymentlink, Title) values (curdate(), userpost, usern, paylink, title);
+    RETURN
+	CASE
+		WHEN EXISTS 
+        (SELECT * FROM Authenticator WHERE username = user AND password = pass ) 
+        THEN 1
+        ELSE 0
+	END;
 end$$
 
+CREATE FUNCTION usernameExists(user varchar(30))
+RETURNS BIT
+begin
+    RETURN
+	CASE
+		WHEN EXISTS 
+        (SELECT * FROM Authenticator WHERE username = user) 
+        THEN 1
+        ELSE 0
+	END;
+end$$
 
 CREATE PROCEDURE registerUser(IN user varchar(30), IN pass varchar(30))
 begin
@@ -38,49 +40,4 @@ begin
 	VALUES (user, pass);
 end$$
 
-/*
-returns: username exists -> 1; the username does not exist -> 0;
-*/ 
-CREATE FUNCTION usernameExists(user varchar(30))
-RETURNS INT DETERMINISTIC
-begin
-	DECLARE count INT;
-	SELECT COUNT(*) 
-		INTO count 
-        FROM authenticator 
-        WHERE username = user;
-    RETURN count;
-end$$
-
-/*
-returns: valid -> 1; invalid -> 0;
-*/ 
-CREATE FUNCTION authenticate(user varchar(30), pass varchar(30))
-RETURNS INT DETERMINISTIC
-begin
-	DECLARE count INT;
-	SELECT COUNT(*) 
-		INTO count 
-        FROM authenticator 
-        WHERE username = user 
-        AND password = pass;
-    RETURN count;
-end$$
-
-CREATE FUNCTION last_id()
-RETURNS INT DETERMINISTIC
-begin
-	DECLARE count INT;
-	SELECT COUNT(*) 
-		INTO count 
-        FROM posts;
-    RETURN count;
-end$$
-
 DELIMITER ;
-
-
-
-
-
-    
