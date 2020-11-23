@@ -22,7 +22,7 @@ public class Server {
             while (true)
                 new ClientHandler(serverSocket.accept()).start();
     	} catch(IOException e) {
-    		e.printStackTrace();
+    		//e.printStackTrace();
     	} finally {
     		stop();
     	}
@@ -32,7 +32,7 @@ public class Server {
         try {
 			serverSocket.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
     }
  
