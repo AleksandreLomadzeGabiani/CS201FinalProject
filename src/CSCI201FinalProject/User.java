@@ -12,9 +12,8 @@ import java.util.Date;
 import java.util.Scanner;
 
 public class User {
-	//TODO: where the user connects to the server socket
+	//Where user connects to the server Socket
 	
-	//TODO: Make runnable so that it supports multi-thredding
     private Socket clientSocket;
     private PrintWriter out;
     private BufferedReader in;
@@ -60,12 +59,23 @@ public class User {
 	}
 	
 	public static void main(String[] args) {
-		User user=new User("a");
+		User user=new User(null);
 		user.startConnection("127.0.0.1", 7777);
 		Scanner sc=new Scanner(System.in);
 		String command="";
+		System.out.println("Welcome to the website");
+		System.out.println("These are the commands");
+		System.out.println("r - register");
+		System.out.println("l - login");
+		System.out.println("n - next post");
+		System.out.println("p - create post");
+		System.out.println("u - update page");
+		System.out.println("q - quit");
 		while(!command.equals("q")){
-			//TODO: Handle user interaction/ command sending
+			//Handle user interaction/ command sending
+			
+			//TODO: test user interaction / command sending
+			
 			command=sc.nextLine();
 			
 			try {
@@ -80,21 +90,105 @@ public class User {
 
 				}else if ("l".equals(command)){
 					//TODO: implement login
+					user.out.println("l");
 					
+					String tempUserName;
+					String tempPassword;
+					
+					System.out.println("Login");
+					
+					System.out.println("Enter username");
+					tempUserName=sc.nextLine();
+					
+					System.out.println("Enter password");
+					tempPassword=sc.nextLine();
+					
+					user.out.println(tempUserName);
+					user.out.flush();
+					user.out.println(tempPassword);
+					user.out.flush();
+					
+					String responseMessage = user.in.readLine();
+					if(responseMessage.equals(""))
+					{
+						System.out.println("Login failed, please try again");
+                    }
+					else
+					{
+						System.out.println("Succesfully logged in with username: "+responseMessage);
+						user=new User(responseMessage);
+						user.startConnection("127.0.0.1", 7777);
+					}
+
 				}else if ("r".equals(command)) {
 					//TODO: implement register
+					user.out.println("r");
+					user.out.flush();
 					
-				}else if ("p".equals(command)) {
+					String tempUserName;
+					String tempPassword;
+					
+					System.out.println("Register");
+					
+					System.out.println("Enter username");
+					tempUserName=sc.nextLine();
+					
+					System.out.println("Enter password");
+					tempPassword=sc.nextLine();
+					
+					user.out.println(tempUserName);
+					user.out.flush();
+					user.out.println(tempPassword);
+					user.out.flush();
+					
+					String responseMessage = user.in.readLine();
+					if(responseMessage.equals(""))
+					{
+						System.out.println("Register failed, please try again");
+                    }
+					else
+					{
+						System.out.println("Succesfully registered with username: "+responseMessage);
+						user = new User(responseMessage);
+						user.startConnection("127.0.0.1", 7777);
+					}
+						
+					
+				}
+				
+				else if("u".equals(command))
+				{
+					user.out.println("u");
+					user.out.flush();
+				}
+				
+				else if ("p".equals(command)) {
 					if(user.userName!=null) {
 						//TODO: implement post creation by user
-						
 						user.out.println("p");
-						user.objOut.writeObject(new Post("test",new Date(),"yo boi", "Donate that $$$ moneyz I need to repair my ship ARRG", "www.crackhouse.com"));
+						user.out.flush();
+						System.out.println("Creating new Post");
+						Date currDate = new Date();
+						String title;
+						String postText;
+						String link;
+						
+						System.out.println("=======Enter post name=======");
+						title = sc.nextLine();
+						System.out.println("=======Enter post description=======");
+						postText = sc.nextLine();
+						System.out.println("=======Enter link=======");
+						link = sc.nextLine();
+						
+						
+						//user.objOut.writeObject(new Post("test",new Date(),"yo boi", "Donate that $$$ moneyz I need to repair my ship ARRG", "www.crackhouse.com"));
+						user.objOut.writeObject(new Post(user.userName,currDate,title,postText,link));
 						System.out.println(user.in.readLine());
 					}else {
 						System.out.println("Guests cannot post. Please log in or register.");
 					}
 				}else if ("q".equals(command)) {
+					System.out.println("Quitting application");
 					break;
 				}
 			}catch(Exception e) {
