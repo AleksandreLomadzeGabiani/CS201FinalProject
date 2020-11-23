@@ -105,6 +105,12 @@ import java.util.Date;
 	//			null if login failed
 	//			(e.g: credentials do not match or the connection gets lost)
 	public synchronized static String loginUser(String userName, String password) {
+		if(userName.length() > 30) {
+			return null;
+		}
+		if(password.length() > 30) {
+			return null;
+		}
 		String sql = "SELECT authenticate(?, ?)"; 
 		try (Connection conn = DriverManager.getConnection(db, user, pwd);
 			CallableStatement stmt = conn.prepareCall(sql);) {
@@ -134,6 +140,12 @@ import java.util.Date;
 	//			"F" if the could not be registered 
 	//				(e.g: username already exists or the connection gets lost)
 	public synchronized static String registerUser(String userName, String password) {
+		if(userName.length() > 30) {
+			return null;
+		}
+		if(password.length() > 30) {
+			return null;
+		}
 		String sql = "SELECT usernameExists(?)"; 
 		String sql2 = "{CALL registerUser(?, ?)}";
 		try (Connection conn = DriverManager.getConnection(db, user, pwd);
